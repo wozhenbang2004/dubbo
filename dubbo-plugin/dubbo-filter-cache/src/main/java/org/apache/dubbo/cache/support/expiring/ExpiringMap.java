@@ -294,7 +294,7 @@ public class ExpiringMap<K, V> implements Map<K, V> {
             for (ExpiryObject o : delegateMap.values()) {
                 long timeIdle = timeNow - o.getLastAccessTime();
                 if (timeIdle >= timeToLiveMillis) {
-                    delegateMap.remove(o.getKey());
+                    delegateMap.computeIfPresent(o.getKey(), (k, current) -> current == o ? null : current);
                 }
             }
         }
